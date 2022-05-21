@@ -1,0 +1,272 @@
+{
+
+  "paths": {
+    "/crypto_price": {
+      "get": {
+        "description": "invoice_Create",
+        "operationId": "invoice_Create",
+        "x-eov-operation-handler": "routes/invoice_Create",
+        "requestBody": {
+          "description": "invoice_Create",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/crypto_price"
+              }
+            }
+          }
+        },
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "pong"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/product_create": {
+      "post": {
+        "description": "product_create",
+        "operationId": "product_create",
+        "x-eov-operation-handler": "routes/product_create",
+        "requestBody": {
+          "description": "product_create",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/product_create"
+              }
+            }
+          }
+        },
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "pong"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/invoice_get": {
+      "get": {
+        "description": "invoice_get",
+        "operationId": "invoice_get",
+        "x-eov-operation-handler": "routes/invoice_get",
+        "requestBody": {
+          "description": "invoice_get",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": ""
+              }
+            }
+          }
+        },
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "pong"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/discount_create": {
+      "post": {
+        "description": "discount_create",
+        "operationId": "discount_create",
+        "x-eov-operation-handler": "routes/discount_create",
+        "requestBody": {
+          "description": "discount_create",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/discount_create"
+              }
+            }
+          }
+        },
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "pong"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+  },
+  "components": {
+    "schemas": {
+      "Pet": {
+        "required": [
+          "id",
+          "name",
+          "type"
+        ],
+        "properties": {
+          "id": {
+            "readOnly": true,
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "tag": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/PetType"
+          }
+        }
+      },
+      "crypto_price": {
+        "properties": {
+
+          "product_obj_id": {
+            "type": "string"
+          },
+          "month_period": {
+            "type": "integer"
+          },
+          "effected_date": {
+            "type": "string"
+          }
+        }
+      },
+      "discount_create": {
+        "additionalProperties": false,
+        "required": [
+          "product_obj_id",
+          "discount",
+          "month_period"
+        ],
+        "properties": {
+
+          "product_obj_id": {
+            "type": "string"
+          },
+          "month_period": {
+            "type": "integer"
+          },
+          "discount": {
+            "type": "integer"
+          }
+        }
+      },
+      "product_create": {
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "price"
+        ],
+        "properties": {
+
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "integer"
+          }
+        }
+      },
+      "PetType": {
+        "type": "string",
+        "enum": [
+          "dog",
+          "cat"
+        ]
+      },
+      "Error": {
+        "required": [
+          "code",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
