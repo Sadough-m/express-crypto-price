@@ -18,20 +18,19 @@ module.exports = async function (io) {
                 await page.goto(`https://coinmarketcap.com/?page=${pageNum + 1}`);
 
                 await page.goto(`https://coinmarketcap.com/?page=${pageNum}`);
-                console.log('page.url', page.url())
                 console.log('pageNum', pageNum)
                 await autoScroll(page);
                 const trs = await page.$$('table.cmc-table > tbody > tr')
                 let data = {info: [], error: []}
                 for (let i = 0; i < trs.length; i++) {
                     try {
-
-                        const coinNameDivElement = await trs[i].$('div.sc-16r8icm-0.sc-1teo54s-1.dNOTPP')
-                        const coinAbsNameDivElement = await trs[i].$('div.sc-1teo54s-2')
-                        const coinPriceDivElement = (await (await trs[i].$('div.sc-131di3y-0')).$('a'))
-                        const name = await coinNameDivElement.$eval('p', x => x.innerText)
-                        const abbreviation = await coinAbsNameDivElement.$eval('p', x => x.innerText)
-                        const price = await coinPriceDivElement.$eval('span', x => x.innerText)
+                        const NameElement = await trs[i].$('div.sc-aef7b723-0.sc-1c5f2868-2.bhBHDD.hide-ranking-number')
+                        const coinAbsNameDivElement = await NameElement.$('p.sc-4984dd93-0.iqdbQL.coin-item-symbol')
+                        const coinNameDivElement = await NameElement.$('p.sc-4984dd93-0.kKpPOn')
+                        const coinPriceDivElement = (await (await trs[i].$('div.sc-500f568e-0.ejtlWy')).$('span'))
+                        const name = await coinNameDivElement.evaluate(x => x.textContent)
+                        const abbreviation = await coinAbsNameDivElement.evaluate(x => x.textContent)
+                        const price = await coinPriceDivElement.evaluate( x => x.textContent)
                         data.info.push({
                             abbreviation: abbreviation,
                             name: name,
@@ -42,18 +41,14 @@ module.exports = async function (io) {
                         await wait(5000)
                         i = i - 1
 
-                        // console.log(`some data miss at row ${i+1}}`,e)
                     }
 
-                    // console.log('coinNameDivElement',await coinNameDivElement.$eval('p',x=>x.innerText))
-                    // console.log('coinAbsNameDivElement',await coinAbsNameDivElement.$eval('p',x=>x.innerText))
-                    // console.log('coinPriceDivElement',await coinPriceDivElement.$eval('span',x=>x.innerText))
 
                 }
+
                 // data.error=error
                 const saveResult = await crypto.create(data)
                 io.emit('crypto channel', data);
-                console.log('saveResult', saveResult)
                 const endTime = new Date().getTime();
                 console.log(`Call ${1} page took ${endTime - startTime} milliseconds`)
             }
@@ -119,7 +114,7 @@ module.exports = async function (io) {
         getPriceFromWebsitePupeteer: async function () {
             // console.log( '$ 29,840.95'.replace(/[$,]/g,''))
             const pages = []
-            const browser = await puppeteer.launch();
+            const browser = await puppeteer.launch({executablePath: 'C:\\Users\\Nikan\\AppData\\Local\\Chromium\\Application\\chrome.exe'});
             for (let i = 0; i < 2; i++) {
                 const page = await browser.newPage();
                 await page.setDefaultNavigationTimeout(60000000);
@@ -164,14 +159,18 @@ module.exports = async function (io) {
         },
         //for one page
         getPriceFromWebsitePupeteer2: async function () {
-            const browser = await puppeteer.launch();
+            const browser = await puppeteer.launch({executablePath: 'C:\\Users\\Nikan\\AppData\\Local\\Chromium\\Application\\chrome.exe'});
 
             const page = await browser.newPage();
             await page.setDefaultNavigationTimeout(60000000);
 
 
-            await page.goto('https://coinmarketcap.com/');
-            const pageLi = await (await page.$('div.sc-4r7b5t-3.bvcQcm')).$$('li')
+            await page.goto('https://coinmarketcap.com/',  {waitUntil: 'networkidle0'},);
+            await autoScroll(page)
+
+            // await page.waitForSelector('.div.sc-64f7b75d-0');
+
+            const pageLi = (await(await page.$('div.sc-64f7b75d-0')).$$('li'))
             const lastPage = await pageLi[pageLi.length - 2].$eval('a', x => x.innerHTML)
             console.log('lastPage', lastPage)
 

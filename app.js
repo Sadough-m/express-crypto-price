@@ -7,8 +7,9 @@ var fs = require('fs')
 const OpenApiValidator = require('express-openapi-validator');
 const https=require('http')
 const mongoose = require('mongoose');
-mongoose.connect(process.env.DB_MONGO_URL, { useNewUrlParser: true,useUnifiedTopology: true });
+mongoose.connect(process.env.DB_MONGO_URL, { useNewUrlParser: true,useUnifiedTopology: true }).then(() => console.log('Connected!')).catch(err=>console.log('err',err));
 mongoose.connection.on('error', error => console.log(error) );
+mongoose.set('strictQuery', true);
 mongoose.Promise = global.Promise;
 
 
